@@ -10,4 +10,9 @@ public class HelloController {
     public String hello() {
         return "Hello World";
     }
+
+    @GetMapping("/about")
+    public String about() {
+        return "I'm learning Spring for the first time!";
+    }
 }
