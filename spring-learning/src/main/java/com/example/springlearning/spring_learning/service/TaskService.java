@@ -18,8 +18,8 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public void addNewTask(CreateTaskRequest createTaskRequest) {
+    public Task addNewTask(CreateTaskRequest createTaskRequest) {
         Task task = new Task(null, createTaskRequest.getTitle(), createTaskRequest.getDescription());
-        taskRepository.addNewTask(task);
+        return taskRepository.addNewTask(task);
     }
 }

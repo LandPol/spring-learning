@@ -27,9 +27,10 @@ public class TaskRepository {
         return tasks;
     }
 
-    public void addNewTask(Task task) {
+    public Task addNewTask(Task task) {
         task.setId(dateTimeToLong());
         tasks.add(task);
+        return task;
     }
 
     private Long dateTimeToLong() {
