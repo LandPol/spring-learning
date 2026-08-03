@@ -1,7 +1,7 @@
 POST http://localhost:8080/tasks
 Content-Type: application/json
 
-{"id":4,"title":"d","description":"ddd"}
+{"title":"d","description":"ddd"}
 
 ###
 GET http://localhost:8080/tasks

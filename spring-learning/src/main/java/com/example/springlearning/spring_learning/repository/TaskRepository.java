@@ -2,6 +2,8 @@ package com.example.springlearning.spring_learning.repository;
 
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.springlearning.spring_learning.model.Task;
@@ -26,6 +28,16 @@ public class TaskRepository {
     }
 
     public void addNewTask(Task task) {
+        task.setId(dateTimeToLong());
         tasks.add(task);
+    }
+
+    private Long dateTimeToLong() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        return localDateTime
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
     }
 }
