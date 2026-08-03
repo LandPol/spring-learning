@@ -24,4 +24,8 @@ public class TaskRepository {
     public List<Task> findAll() {
         return tasks;
     }
+
+    public void addNewTask(Task task) {
+        tasks.add(task);
+    }
 }

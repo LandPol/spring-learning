@@ -3,6 +3,8 @@ package com.example.springlearning.spring_learning.controller;
 import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.service.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,5 +20,11 @@ public class TaskController {
     @GetMapping("/tasks")
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();
+    }
+
+    @PostMapping("/tasks")
+    public List<Task> addNewTask(@RequestBody Task task) {
+        taskService.addNewTask(task);
+        return List.of(task);
     }
 }
