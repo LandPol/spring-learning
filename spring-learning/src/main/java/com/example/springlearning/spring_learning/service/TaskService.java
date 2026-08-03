@@ -1,5 +1,6 @@
 package com.example.springlearning.spring_learning.service;
 
+import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
 import com.example.springlearning.spring_learning.model.Task;
 import org.springframework.stereotype.Service;
 import com.example.springlearning.spring_learning.repository.TaskRepository;
@@ -17,7 +18,8 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public void addNewTask(Task task) {
+    public void addNewTask(CreateTaskRequest createTaskRequest) {
+        Task task = new Task(null, createTaskRequest.getTitle(), createTaskRequest.getDescription());
         taskRepository.addNewTask(task);
     }
 }

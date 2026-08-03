@@ -1,5 +1,6 @@
 package com.example.springlearning.spring_learning.controller;
 
+import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
 import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.service.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,7 @@ public class TaskController {
     }
 
     @PostMapping("/tasks")
-    public List<Task> addNewTask(@RequestBody Task task) {
-        taskService.addNewTask(task);
-        return List.of(task);
+    public void addNewTask(@RequestBody CreateTaskRequest createTaskRequest) {
+        taskService.addNewTask(createTaskRequest);
     }
 }
