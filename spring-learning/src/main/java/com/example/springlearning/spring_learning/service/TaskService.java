@@ -22,4 +22,8 @@ public class TaskService {
         Task task = new Task(null, createTaskRequest.getTitle(), createTaskRequest.getDescription());
         return taskRepository.addNewTask(task);
     }
+
+    public Task getTaskById(Long id) {
+        return taskRepository.findTaskById(id);
+    }
 }

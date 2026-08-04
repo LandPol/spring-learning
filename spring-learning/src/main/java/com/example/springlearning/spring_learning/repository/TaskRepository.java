@@ -41,4 +41,13 @@ public class TaskRepository {
                 .toInstant()
                 .toEpochMilli();
     }
+
+    public Task findTaskById(Long id) {
+        for(Task task : tasks) {
+            if(task.getId().equals(id)) {
+                return task;
+            }
+        }
+        return null;
+    }
 }
