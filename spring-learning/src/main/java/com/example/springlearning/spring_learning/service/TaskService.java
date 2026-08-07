@@ -1,6 +1,7 @@
 package com.example.springlearning.spring_learning.service;
 
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
+import com.example.springlearning.spring_learning.exception.TaskNotFoundException;
 import com.example.springlearning.spring_learning.model.Task;
 import org.springframework.stereotype.Service;
 import com.example.springlearning.spring_learning.repository.TaskRepository;
@@ -24,6 +25,10 @@ public class TaskService {
     }
 
     public Task getTaskById(Long id) {
-        return taskRepository.findTaskById(id);
+        Task task = taskRepository.findTaskById(id);
+        if (task == null) {
+            throw new TaskNotFoundException("Task not found.");
+        }
+        return task;
     }
 }
