@@ -62,4 +62,18 @@ public class TaskRepository {
             return false;
         }
     }
+
+    public boolean updateTask(Task task) {
+        if (task != null) {
+            for (int i = 0; i < tasks.size(); i++) {
+                if (tasks.get(i).getId().equals(task.getId())) {
+                    tasks.set(i, task);
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
 }

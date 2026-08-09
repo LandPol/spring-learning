@@ -17,3 +17,9 @@ Accept: application/json
 
 ###
 DELETE http://localhost:8080/tasks/3
+
+###
+PUT http://localhost:8080/tasks/2
+Content-Type: application/json
+
+{"title":"e","description":"eee"}
