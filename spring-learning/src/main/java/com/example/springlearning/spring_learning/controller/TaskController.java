@@ -32,7 +32,7 @@ public class TaskController {
         return taskService.getTaskById(id);
     }
 
-    @PostMapping("/tasks/{id}")
+    @DeleteMapping("/tasks/{id}")
     public ResponseEntity<Void> deleteTaskById(@PathVariable Long id) {
         taskService.deleteTaskById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
