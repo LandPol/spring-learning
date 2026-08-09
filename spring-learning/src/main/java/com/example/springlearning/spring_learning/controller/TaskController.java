@@ -3,6 +3,8 @@ package com.example.springlearning.spring_learning.controller;
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
 import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.service.TaskService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,5 +30,11 @@ public class TaskController {
     @GetMapping("/tasks/{id}")
     public Task getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
+    }
+
+    @PostMapping("/tasks/{id}")
+    public ResponseEntity<Void> deleteTaskById(@PathVariable Long id) {
+        taskService.deleteTaskById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

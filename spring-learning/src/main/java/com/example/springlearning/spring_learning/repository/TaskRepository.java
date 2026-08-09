@@ -1,5 +1,7 @@
 package com.example.springlearning.spring_learning.repository;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -49,5 +51,15 @@ public class TaskRepository {
             }
         }
         return null;
+    }
+
+    public boolean deleteTaskById(Long id) {
+        Task task = findTaskById(id);
+        if (task != null) {
+            tasks.remove(task);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.example.springlearning.spring_learning.service;
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
 import com.example.springlearning.spring_learning.exception.TaskNotFoundException;
 import com.example.springlearning.spring_learning.model.Task;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.example.springlearning.spring_learning.repository.TaskRepository;
 import java.util.List;
@@ -30,5 +31,12 @@ public class TaskService {
             throw new TaskNotFoundException("Task not found.");
         }
         return task;
+    }
+
+    public void deleteTaskById(Long id) {
+        boolean result = taskRepository.deleteTaskById(id);
+        if (!result) {
+            throw new TaskNotFoundException("Task not found.");
+        }
     }
 }
