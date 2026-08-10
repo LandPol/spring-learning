@@ -1,6 +1,7 @@
 package com.example.springlearning.spring_learning.controller;
 
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
+import com.example.springlearning.spring_learning.dto.PatchTaskRequest;
 import com.example.springlearning.spring_learning.dto.UpdateTaskRequest;
 import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.service.TaskService;
@@ -42,5 +43,10 @@ public class TaskController {
     @PutMapping("/tasks/{id}")
     public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody UpdateTaskRequest updateTaskRequest) {
         return new ResponseEntity<>(taskService.updateTaskById(id, updateTaskRequest), HttpStatus.OK);
+    }
+
+    @PatchMapping("/tasks/{id}")
+    public ResponseEntity<Task> patchTaskById(@PathVariable Long id, @RequestBody PatchTaskRequest patchTaskRequest) {
+        return new ResponseEntity<>(taskService.patchTaskById(id, patchTaskRequest), HttpStatus.OK);
     }
 }
