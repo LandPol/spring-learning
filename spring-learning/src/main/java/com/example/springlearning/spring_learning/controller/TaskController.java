@@ -42,7 +42,7 @@ public class TaskController {
     }
 
     @PutMapping("/tasks/{id}")
-    public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody UpdateTaskRequest updateTaskRequest) {
+    public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @Valid @RequestBody UpdateTaskRequest updateTaskRequest) {
         return new ResponseEntity<>(taskService.updateTaskById(id, updateTaskRequest), HttpStatus.OK);
     }
 
