@@ -35,4 +35,11 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(TaskAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleTaskAlreadyExistsException(TaskAlreadyExistsException e) {
+        List<FieldErrorResponse> fieldErrorResponseList = new ArrayList<>();
+        ErrorResponse errorResponse = new ErrorResponse(409, "Task already exists", LocalDateTime.now(), fieldErrorResponseList);
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }

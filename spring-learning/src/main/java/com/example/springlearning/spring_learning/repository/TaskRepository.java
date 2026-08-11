@@ -76,4 +76,22 @@ public class TaskRepository {
             return false;
         }
     }
+
+    public boolean existsTaskWithTitle(String title) {
+        for(Task task : tasks) {
+            if(task.getTitle().equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean existsAnotherTaskWithTitle(Long id, String title) {
+        for (Task task : tasks) {
+            if (!task.getId().equals(id) && task.getTitle().equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

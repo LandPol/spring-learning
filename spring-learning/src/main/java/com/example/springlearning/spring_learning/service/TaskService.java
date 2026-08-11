@@ -3,6 +3,7 @@ package com.example.springlearning.spring_learning.service;
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
 import com.example.springlearning.spring_learning.dto.PatchTaskRequest;
 import com.example.springlearning.spring_learning.dto.UpdateTaskRequest;
+import com.example.springlearning.spring_learning.exception.TaskAlreadyExistsException;
 import com.example.springlearning.spring_learning.exception.TaskNotFoundException;
 import com.example.springlearning.spring_learning.model.Task;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class TaskService {
     }
 
     public Task addNewTask(CreateTaskRequest createTaskRequest) {
+        if (taskRepository.existsTaskWithTitle(createTaskRequest.getTitle())) {
+            throw new TaskAlreadyExistsException("Task already exists");
+        }
         Task task = new Task(null, createTaskRequest.getTitle(), createTaskRequest.getDescription());
         return taskRepository.addNewTask(task);
     }
@@ -43,6 +47,9 @@ public class TaskService {
     }
 
     public Task updateTaskById(Long id, UpdateTaskRequest updateTaskRequest) {
+        if (taskRepository.existsAnotherTaskWithTitle(id, updateTaskRequest.getTitle())) {
+            throw new TaskAlreadyExistsException("Task already exists");
+        }
         Task task = taskRepository.findTaskById(id);
         if (task != null) {
             task.setTitle(updateTaskRequest.getTitle());
@@ -58,6 +65,9 @@ public class TaskService {
     }
 
     public Task patchTaskById(Long id, PatchTaskRequest patchTaskRequest) {
+        if (taskRepository.existsAnotherTaskWithTitle(id, patchTaskRequest.getTitle())) {
+            throw new TaskAlreadyExistsException("Task already exists");
+        }
         Task task = taskRepository.findTaskById(id);
         if (task != null) {
             if (patchTaskRequest.getTitle() != null) {
