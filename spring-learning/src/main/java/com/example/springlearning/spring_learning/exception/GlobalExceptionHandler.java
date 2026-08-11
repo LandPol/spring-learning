@@ -14,8 +14,10 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(TaskNotFoundException.class)
-    public ResponseEntity<String> handleTaskNotFoundException(TaskNotFoundException e) {
-        return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleTaskNotFoundException(TaskNotFoundException e) {
+        List<FieldErrorResponse> fieldErrorResponseList = new ArrayList<>();
+        ErrorResponse errorResponse = new ErrorResponse(404, "Task not found", LocalDateTime.now(), fieldErrorResponseList);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
