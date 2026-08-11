@@ -47,7 +47,7 @@ public class TaskController {
     }
 
     @PatchMapping("/tasks/{id}")
-    public ResponseEntity<Task> patchTaskById(@PathVariable Long id, @RequestBody PatchTaskRequest patchTaskRequest) {
+    public ResponseEntity<Task> patchTaskById(@PathVariable Long id, @Valid @RequestBody PatchTaskRequest patchTaskRequest) {
         return new ResponseEntity<>(taskService.patchTaskById(id, patchTaskRequest), HttpStatus.OK);
     }
 }

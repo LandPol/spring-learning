@@ -34,7 +34,19 @@ Content-Type: application/json
 PATCH http://localhost:8080/tasks/1
 Content-Type: application/json
 
-{"description":  "j"}
+{"description":  " j "}
+
+###
+PATCH http://localhost:8080/tasks/1
+Content-Type: application/json
+
+{}
+
+###
+PATCH http://localhost:8080/tasks/1
+Content-Type: application/json
+
+{"description":  " "}
 
 ###
 PUT http://localhost:8080/tasks/1

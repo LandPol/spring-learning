@@ -1,7 +1,12 @@
 package com.example.springlearning.spring_learning.dto;
 
+import jakarta.validation.constraints.Pattern;
+
 public class PatchTaskRequest {
+    @Pattern(regexp = ".*\\S.*")
     private String title;
+
+    @Pattern(regexp = ".*\\S.*")
     private String description;
 
     public PatchTaskRequest(String title, String description) {
