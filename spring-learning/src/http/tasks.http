@@ -35,3 +35,21 @@ PATCH http://localhost:8080/tasks/1
 Content-Type: application/json
 
 {"description":  "j"}
+
+###
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{"title":"d","description":""}
+
+###
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{"title":"","description":"k"}
+
+###
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{"title":"","description":""}

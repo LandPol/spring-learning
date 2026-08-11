@@ -5,6 +5,7 @@ import com.example.springlearning.spring_learning.dto.PatchTaskRequest;
 import com.example.springlearning.spring_learning.dto.UpdateTaskRequest;
 import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class TaskController {
     }
 
     @PostMapping("/tasks")
-    public Task addNewTask(@RequestBody CreateTaskRequest createTaskRequest) {
+    public Task addNewTask(@Valid @RequestBody CreateTaskRequest createTaskRequest) {
         return taskService.addNewTask(createTaskRequest);
     }
 

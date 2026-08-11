@@ -1,7 +1,12 @@
 package com.example.springlearning.spring_learning.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CreateTaskRequest {
+    @NotBlank(message = "Title is mandatory")
     private String title;
+
+    @NotBlank(message = "Description is mandatory")
     private String description;
 
     public CreateTaskRequest(String title, String description) {
