@@ -1,14 +1,14 @@
 POST http://localhost:8080/tasks
 Content-Type: application/json
 
-{"title":"a","description":"aaa"}
+{"title":"a","description":"aaa","priority": 2}
 
 ###
 
 POST http://localhost:8080/tasks
 Content-Type: application/json
 
-{"title":"f","description":"ddd"}
+{"title":"s","description":"ddd"}
 
 ###
 GET http://localhost:8080/tasks
@@ -23,16 +23,16 @@ GET http://localhost:8080/tasks/7
 Accept: application/json
 
 ###
-DELETE http://localhost:8080/tasks/3
+DELETE http://localhost:8080/tasks/6
 
 ###
-PUT http://localhost:8080/tasks/2
+PUT http://localhost:8080/tasks/4
 Content-Type: application/json
 
-{"title":"e","description":"eee"}
+{"title":"e","description":"eee","priority":  3}
 
 ###
-PATCH http://localhost:8080/tasks/1
+PATCH http://localhost:8080/tasks/3
 Content-Type: application/json
 
 {"title": "w"}
@@ -44,13 +44,13 @@ Content-Type: application/json
 {"description":  " j "}
 
 ###
-PATCH http://localhost:8080/tasks/1
+PATCH http://localhost:8080/tasks/3
 Content-Type: application/json
 
 {}
 
 ###
-PATCH http://localhost:8080/tasks/1
+PATCH http://localhost:8080/tasks/3
 Content-Type: application/json
 
 {"description":  " "}

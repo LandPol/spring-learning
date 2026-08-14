@@ -1,5 +1,7 @@
 package com.example.springlearning.spring_learning.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 public class CreateTaskRequest {
@@ -9,9 +11,13 @@ public class CreateTaskRequest {
     @NotBlank(message = "Description is mandatory")
     private String description;
 
-    public CreateTaskRequest(String title, String description) {
+    @Min(0) @Max(5)
+    private Integer priority;
+
+    public CreateTaskRequest(String title, String description, Integer priority) {
         this.title = title;
         this.description = description;
+        this.priority = priority;
     }
 
     public String getTitle() {
@@ -28,5 +34,13 @@ public class CreateTaskRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 }

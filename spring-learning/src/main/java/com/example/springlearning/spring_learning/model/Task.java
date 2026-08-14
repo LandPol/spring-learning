@@ -12,11 +12,13 @@ public class Task {
     private Long id;
     private String title;
     private String description;
+    private Integer priority;
 
-    public Task(Long id, String title, String description) {
+    public Task(Long id, String title, String description, int priority) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.priority = priority;
     }
 
     public Task() {
@@ -45,5 +47,13 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

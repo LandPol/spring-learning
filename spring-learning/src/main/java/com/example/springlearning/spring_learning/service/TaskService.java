@@ -28,7 +28,7 @@ public class TaskService {
         if (taskRepository.existsByTitle(createTaskRequest.getTitle())) {
             throw new TaskAlreadyExistsException("Task already exists");
         }
-        Task task = new Task(null, createTaskRequest.getTitle(), createTaskRequest.getDescription());
+        Task task = new Task(null, createTaskRequest.getTitle(), createTaskRequest.getDescription(), createTaskRequest.getPriority() != null ? createTaskRequest.getPriority() : 0);
         return taskRepository.save(task);
     }
 
@@ -59,6 +59,7 @@ public class TaskService {
         Task taskToUpdate = task.get();
         taskToUpdate.setTitle(updateTaskRequest.getTitle());
         taskToUpdate.setDescription(updateTaskRequest.getDescription());
+        taskToUpdate.setPriority(updateTaskRequest.getPriority());
         taskRepository.save(taskToUpdate);
         return taskToUpdate;
     }
@@ -80,6 +81,9 @@ public class TaskService {
         }
         if (patchTaskRequest.getDescription() != null) {
             taskToPatch.setDescription(patchTaskRequest.getDescription());
+        }
+        if (patchTaskRequest.getPriority() != null) {
+            taskToPatch.setPriority(patchTaskRequest.getPriority());
         }
         taskRepository.save(taskToPatch);
         return taskToPatch;
