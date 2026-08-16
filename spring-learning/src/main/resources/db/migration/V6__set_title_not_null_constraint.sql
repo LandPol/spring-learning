@@ -1,0 +1,7 @@
+ALTER TABLE Task
+ALTER COLUMN title
+SET NOT NULL;
+
+ALTER TABLE Task
+ADD CONSTRAINT title_not_empty
+CHECK (LENGTH(title) > 0);
