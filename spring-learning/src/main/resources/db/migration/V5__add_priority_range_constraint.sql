@@ -1,0 +1,3 @@
+ALTER TABLE Task
+ADD CONSTRAINT priority_range
+CHECK (priority BETWEEN 0 AND 5);

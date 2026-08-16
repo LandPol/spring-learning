@@ -1,0 +1,3 @@
+ALTER TABLE Task
+ALTER COLUMN priority
+SET NOT NULL;
