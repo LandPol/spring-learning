@@ -1,6 +1,7 @@
 package com.example.springlearning.spring_learning.service;
 
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
+import com.example.springlearning.spring_learning.dto.PatchTaskRequest;
 import com.example.springlearning.spring_learning.dto.UpdateTaskRequest;
 import com.example.springlearning.spring_learning.exception.TaskAlreadyExistsException;
 import com.example.springlearning.spring_learning.exception.TaskNotFoundException;
@@ -115,6 +116,37 @@ public class TaskServiceTest {
         when(taskRepository.findById(1L)).thenReturn(Optional.empty());
 
         TaskNotFoundException exception = assertThrows(TaskNotFoundException.class, () -> taskService.updateTaskById(1L, new UpdateTaskRequest("Title 2", "Description 2", 1)));
+
+        assertEquals("Task not found.", exception.getMessage());
+        verify(taskRepository, never()).save(any(Task.class));
+    }
+
+    @Test
+    void shouldPatchTaskWhenTaskExistsAndTitleIsUnique() {
+        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(false);
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(new Task(1L, "Task 1", "Description 1", 3)));
+
+        taskService.patchTaskById(1L, new PatchTaskRequest(null, "Description 2", 1));
+
+        verify(taskRepository).save(any(Task.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTaskCannotBePatchedBecauseTitleIsNotUnique() {
+        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(true);
+
+        TaskAlreadyExistsException exception = assertThrows(TaskAlreadyExistsException.class, () -> taskService.patchTaskById(1L, new PatchTaskRequest(null, "Description 2", 1)));
+
+        assertEquals("Task already exists", exception.getMessage());
+        verify(taskRepository, never()).save(any(Task.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTaskCannotBePatchedBecauseTaskDoesNotExist() {
+        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(false);
+        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+
+        TaskNotFoundException exception = assertThrows(TaskNotFoundException.class, () -> taskService.patchTaskById(1L, new PatchTaskRequest(null, "Description 2", 1)));
 
         assertEquals("Task not found.", exception.getMessage());
         verify(taskRepository, never()).save(any(Task.class));
