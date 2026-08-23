@@ -1,6 +1,7 @@
 package com.example.springlearning.spring_learning.service;
 
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
+import com.example.springlearning.spring_learning.dto.UpdateTaskRequest;
 import com.example.springlearning.spring_learning.exception.TaskAlreadyExistsException;
 import com.example.springlearning.spring_learning.exception.TaskNotFoundException;
 import com.example.springlearning.spring_learning.model.Task;
@@ -67,5 +68,55 @@ public class TaskServiceTest {
         TaskAlreadyExistsException exception = assertThrows(TaskAlreadyExistsException.class, () -> taskService.addNewTask(createTaskRequest));
         verify(taskRepository, never()).save(any(Task.class));
         assertEquals("Task already exists", exception.getMessage());
+    }
+
+    @Test
+    void shouldDeleteTaskWhenTaskExists() {
+        when(taskRepository.existsById(1L)).thenReturn(true);
+
+        taskService.deleteTaskById(1L);
+
+        verify(taskRepository).deleteById(1L);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTaskCannotBeDeleted() {
+        when(taskRepository.existsById(1L)).thenReturn(false);
+
+        TaskNotFoundException exception = assertThrows(TaskNotFoundException.class, () -> taskService.deleteTaskById(1L));
+
+        assertEquals("Task not found.", exception.getMessage());
+        verify(taskRepository, never()).deleteById(1L);
+    }
+
+    @Test
+    void shouldUpdateTaskWhenTaskExistsAndTitleIsUnique() {
+        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(false);
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(new Task(1L, "Task 1", "Description 1", 3)));
+
+        taskService.updateTaskById(1L, new UpdateTaskRequest("Title 2", "Description 2", 1));
+
+        verify(taskRepository).save(any(Task.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTaskCannotBeUpdatedBecauseTitleIsNotUnique() {
+        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(true);
+
+        TaskAlreadyExistsException exception = assertThrows(TaskAlreadyExistsException.class, () -> taskService.updateTaskById(1L, new UpdateTaskRequest("Title 2", "Description 2", 1)));
+
+        assertEquals("Task already exists", exception.getMessage());
+        verify(taskRepository, never()).save(any(Task.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTaskCannotBeUpdatedBecauseTaskDoesNotExist() {
+        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(false);
+        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+
+        TaskNotFoundException exception = assertThrows(TaskNotFoundException.class, () -> taskService.updateTaskById(1L, new UpdateTaskRequest("Title 2", "Description 2", 1)));
+
+        assertEquals("Task not found.", exception.getMessage());
+        verify(taskRepository, never()).save(any(Task.class));
     }
 }
