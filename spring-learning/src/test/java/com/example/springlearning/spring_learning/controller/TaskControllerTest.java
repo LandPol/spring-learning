@@ -13,6 +13,9 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -111,5 +114,39 @@ public class TaskControllerTest {
         ).andExpect(status().isBadRequest());
 
         verify(taskService, never()).addNewTask(any(CreateTaskRequest.class));
+    }
+
+    @Test
+    void shouldReturnTaskListWhenTaskExists() throws Exception {
+        List<Task> taskList = new ArrayList<>();
+        taskList.add(new Task(1L, "Task 1", "Description 1", 3));
+        taskList.add(new Task(2L, "Task 2", "Description 2", 1));
+        when(taskService.getAllTasks()).thenReturn(taskList);
+        mockMvc.perform(get("/tasks")).andExpectAll(
+                status().isOk(),
+                jsonPath("$[0].title").value("Task 1"),
+                jsonPath("$[0].description").value("Description 1"),
+                jsonPath("$[0].priority").value(3),
+
+                jsonPath("$[1].title").value("Task 2"),
+                jsonPath("$[1].description").value("Description 2"),
+                jsonPath("$[1].priority").value(1),
+
+                jsonPath("$.length()").value(2)
+        );
+
+        verify(taskService).getAllTasks();
+    }
+
+    @Test
+    void shouldReturnEmptyTaskListWhenTaskDoesNotExist() throws Exception {
+        List<Task> taskList = new ArrayList<>();
+        when(taskService.getAllTasks()).thenReturn(taskList);
+        mockMvc.perform(get("/tasks")).andExpectAll(
+                status().isOk(),
+                jsonPath("$.length()").value(0)
+        );
+
+        verify(taskService).getAllTasks();
     }
 }
