@@ -19,8 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -148,5 +147,21 @@ public class TaskControllerTest {
         );
 
         verify(taskService).getAllTasks();
+    }
+
+    @Test
+    void shouldDeleteTaskWhenTaskExists() throws Exception {
+        mockMvc.perform(delete("/tasks/1")).andExpect(status().isNoContent());
+
+        verify(taskService).deleteTaskById(1L);
+    }
+
+    @Test
+    void shouldReturnTaskNotFoundWhenTaskDoesNotExist() throws Exception {
+        doThrow(new TaskNotFoundException("Task not found.")).when(taskService).deleteTaskById(1L);
+
+        mockMvc.perform(delete("/tasks/1")).andExpect(status().isNotFound());
+
+        verify(taskService).deleteTaskById(1L);
     }
 }
