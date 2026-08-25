@@ -9,6 +9,7 @@ import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -57,8 +58,14 @@ public class TaskServiceTest {
 
         Task taskResult = taskService.addNewTask(createTaskRequest);
 
-        verify(taskRepository).save(any(Task.class));
+        ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository).save(taskArgumentCaptor.capture());
         assertEquals(task, taskResult);
+
+        Task capturedTask = taskArgumentCaptor.getValue();
+        assertEquals("Task 1", capturedTask.getTitle());
+        assertEquals("Description 1", capturedTask.getDescription());
+        assertEquals(3, capturedTask.getPriority());
     }
 
     @Test
@@ -92,12 +99,18 @@ public class TaskServiceTest {
 
     @Test
     void shouldUpdateTaskWhenTaskExistsAndTitleIsUnique() {
-        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(false);
+        when(taskRepository.existsByTitleAndIdNot("Title 2",1L)).thenReturn(false);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(new Task(1L, "Task 1", "Description 1", 3)));
 
-        taskService.updateTaskById(1L, new UpdateTaskRequest("Title 1", "Description 2", 1));
+        taskService.updateTaskById(1L, new UpdateTaskRequest("Title 2", "Description 2", 1));
 
-        verify(taskRepository).save(any(Task.class));
+        ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository).save(taskArgumentCaptor.capture());
+
+        Task capturedTask = taskArgumentCaptor.getValue();
+        assertEquals("Title 2", capturedTask.getTitle());
+        assertEquals("Description 2", capturedTask.getDescription());
+        assertEquals(1, capturedTask.getPriority());
     }
 
     @Test
@@ -123,12 +136,18 @@ public class TaskServiceTest {
 
     @Test
     void shouldPatchTaskWhenTaskExistsAndTitleIsUnique() {
-        when(taskRepository.existsByTitleAndIdNot("Title 1",1L)).thenReturn(false);
+        when(taskRepository.existsByTitleAndIdNot("Title 2",1L)).thenReturn(false);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(new Task(1L, "Task 1", "Description 1", 3)));
 
-        taskService.patchTaskById(1L, new PatchTaskRequest("Title 1", null, 1));
+        taskService.patchTaskById(1L, new PatchTaskRequest("Title 2", null, 1));
 
-        verify(taskRepository).save(any(Task.class));
+        ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository).save(taskArgumentCaptor.capture());
+
+        Task capturedTask = taskArgumentCaptor.getValue();
+        assertEquals("Title 2", capturedTask.getTitle());
+        assertEquals("Description 1", capturedTask.getDescription());
+        assertEquals(1, capturedTask.getPriority());
     }
 
     @Test
