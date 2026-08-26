@@ -1,6 +1,8 @@
 package com.example.springlearning.spring_learning.controller;
 
 import com.example.springlearning.spring_learning.dto.CreateTaskRequest;
+import com.example.springlearning.spring_learning.dto.UpdateTaskRequest;
+import com.example.springlearning.spring_learning.exception.TaskAlreadyExistsException;
 import com.example.springlearning.spring_learning.exception.TaskNotFoundException;
 import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.service.TaskService;
@@ -163,5 +165,50 @@ public class TaskControllerTest {
         mockMvc.perform(delete("/tasks/1")).andExpect(status().isNotFound());
 
         verify(taskService).deleteTaskById(1L);
+    }
+
+    @Test
+    void shouldUpdateTaskWhenRequestIsValid() throws Exception {
+        when(taskService.updateTaskById(eq(1L), any(UpdateTaskRequest.class))).thenReturn(new Task(1L, "Task 2", "Description 2", 1));
+        mockMvc.perform(put("/tasks/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task 2", "description": "Description 2", "priority": 1}
+                        """)
+        ).andExpect(status().isOk());
+
+        ArgumentCaptor<UpdateTaskRequest> taskArgumentCaptor = ArgumentCaptor.forClass(UpdateTaskRequest.class);
+        verify(taskService).updateTaskById(eq(1L),taskArgumentCaptor.capture());
+
+        UpdateTaskRequest capturedTask = taskArgumentCaptor.getValue();
+        assertEquals("Task 2", capturedTask.getTitle());
+        assertEquals("Description 2", capturedTask.getDescription());
+        assertEquals(1, capturedTask.getPriority());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenTaskDoesNotExists() throws Exception {
+        when(taskService.updateTaskById(eq(1L), any(UpdateTaskRequest.class))).thenThrow(new TaskNotFoundException("Task not found."));
+        mockMvc.perform(put("/tasks/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task 2", "description": "Description 2", "priority": 1}
+                        """)
+        ).andExpect(status().isNotFound());
+
+        verify(taskService).updateTaskById(eq(1L),any(UpdateTaskRequest.class));
+    }
+
+    @Test
+    void shouldReturnTaskAlreadyExistsWhenTaskExists() throws Exception {
+        when(taskService.updateTaskById(eq(1L), any(UpdateTaskRequest.class))).thenThrow(new TaskAlreadyExistsException("Task already exists"));
+        mockMvc.perform(put("/tasks/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task 2", "description": "Description 2", "priority": 1}
+                        """)
+        ).andExpect(status().isConflict());
+
+        verify(taskService).updateTaskById(eq(1L),any(UpdateTaskRequest.class));
     }
 }
