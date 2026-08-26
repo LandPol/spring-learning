@@ -119,4 +119,202 @@ public class TaskControllerIntegrationTest {
 
         mockMvc.perform(get("/tasks/{id}", resultTask.getId())).andExpect(status().isNotFound());
     }
+
+    @Test
+    void shouldReturnOkAfterTaskIsUpdated() throws Exception {
+        MvcResult result = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        ).andReturn();
+
+        Task resultTask = objectMapper.readValue(result.getResponse().getContentAsString(), Task.class);
+
+        mockMvc.perform(put("/tasks/{id}", resultTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 312321", "priority": 2}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 312321"),
+                jsonPath("$.priority").value(2)
+        );
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenUpdateTaskDoesNotExist() throws Exception {
+        mockMvc.perform(put("/tasks/{id}", -1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 312321", "priority": 2}
+                        """)
+        ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenUpdateTaskRequestIsInvalid() throws Exception {
+        MvcResult result = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        ).andReturn();
+
+        Task resultTask = objectMapper.readValue(result.getResponse().getContentAsString(), Task.class);
+
+        mockMvc.perform(put("/tasks/{id}", resultTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": null, "priority": 2}
+                        """)
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnConflictWhenUpdateTaskTitleAlreadyExist() throws Exception {
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        );
+
+        MvcResult result = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test2", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test2"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        ).andReturn();
+
+        Task resultTask = objectMapper.readValue(result.getResponse().getContentAsString(), Task.class);
+
+        mockMvc.perform(put("/tasks/{id}", resultTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 13123", "priority": 2}
+                        """)
+        ).andExpect(status().isConflict());
+    }
+
+    @Test
+    void shouldReturnOkAfterTaskIsPatched() throws Exception {
+        MvcResult result = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        ).andReturn();
+
+        Task resultTask = objectMapper.readValue(result.getResponse().getContentAsString(), Task.class);
+
+        mockMvc.perform(patch("/tasks/{id}", resultTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": null, "description": "Description 312321", "priority": 2}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 312321"),
+                jsonPath("$.priority").value(2)
+        );
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenPatchTaskDoesNotExist() throws Exception {
+        mockMvc.perform(patch("/tasks/{id}", -1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 312321", "priority": 2}
+                        """)
+        ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenPatchTaskRequestIsInvalid() throws Exception {
+        MvcResult result = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        ).andReturn();
+
+        Task resultTask = objectMapper.readValue(result.getResponse().getContentAsString(), Task.class);
+
+        mockMvc.perform(patch("/tasks/{id}", resultTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": null, "priority": 342}
+                        """)
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnConflictWhenPatchTaskTitleAlreadyExist() throws Exception {
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        );
+
+        MvcResult result = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test2", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test2"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        ).andReturn();
+
+        Task resultTask = objectMapper.readValue(result.getResponse().getContentAsString(), Task.class);
+
+        mockMvc.perform(patch("/tasks/{id}", resultTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": null, "priority": 2}
+                        """)
+        ).andExpect(status().isConflict());
+    }
 }
