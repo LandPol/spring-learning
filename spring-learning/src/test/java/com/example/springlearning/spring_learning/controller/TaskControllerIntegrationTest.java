@@ -98,4 +98,25 @@ public class TaskControllerIntegrationTest {
     void shouldReturnNotFoundWhenTaskDoesNotExist() throws Exception {
         mockMvc.perform(get("/tasks/{id}", -1)).andExpect(status().isNotFound());
     }
+
+    @Test
+    void shouldReturnNotFoundAfterTaskIsDeleted() throws Exception {
+        MvcResult result = mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        ).andReturn();
+
+        Task resultTask = objectMapper.readValue(result.getResponse().getContentAsString(), Task.class);
+
+        mockMvc.perform(delete("/tasks/{id}", resultTask.getId())).andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/tasks/{id}", resultTask.getId())).andExpect(status().isNotFound());
+    }
 }
