@@ -95,6 +95,16 @@ public class TaskControllerIntegrationTest {
     }
 
     @Test
+    void shouldReturnBadRequestWhenCreateTaskRequestIsInvalid() throws Exception {
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": null, "priority": 1}
+                        """)
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
     void shouldReturnNotFoundWhenTaskDoesNotExist() throws Exception {
         mockMvc.perform(get("/tasks/{id}", -1)).andExpect(status().isNotFound());
     }
@@ -118,6 +128,11 @@ public class TaskControllerIntegrationTest {
         mockMvc.perform(delete("/tasks/{id}", resultTask.getId())).andExpect(status().isNoContent());
 
         mockMvc.perform(get("/tasks/{id}", resultTask.getId())).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenTaskToDeleteDoesNotExist() throws Exception {
+        mockMvc.perform(delete("/tasks/{id}", -1)).andExpect(status().isNotFound());
     }
 
     @Test
