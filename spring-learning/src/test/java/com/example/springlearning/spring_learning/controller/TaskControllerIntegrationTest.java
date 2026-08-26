@@ -71,4 +71,31 @@ public class TaskControllerIntegrationTest {
                 jsonPath("$[*].priority").value(hasItem(3))
         );
     }
+
+    @Test
+    void shouldReturnConflictWhenTaskAlreadyExists() throws Exception {
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 1", "priority": 3}
+                        """)
+        ).andExpectAll(
+                status().isOk(),
+                jsonPath("$.title").value("Task Integration Test1"),
+                jsonPath("$.description").value("Description 1"),
+                jsonPath("$.priority").value(3)
+        );
+
+        mockMvc.perform(post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"title": "Task Integration Test1", "description": "Description 2", "priority": 1}
+                        """)
+        ).andExpect(status().isConflict());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenTaskDoesNotExist() throws Exception {
+        mockMvc.perform(get("/tasks/{id}", -1)).andExpect(status().isNotFound());
+    }
 }
