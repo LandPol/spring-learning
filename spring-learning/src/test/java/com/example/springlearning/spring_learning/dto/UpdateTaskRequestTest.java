@@ -76,14 +76,14 @@ public class UpdateTaskRequestTest {
     }
 
     @Test
-    void shouldHaveNoViolationsWhenPriorityIsEqualMax() {
+    void shouldHaveNoViolationsWhenPriorityIsEqualToMax() {
         UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest("Title 1", "Description 1", 5);
         Set<ConstraintViolation<UpdateTaskRequest>> violations = validator.validate(updateTaskRequest);
         assertTrue(violations.isEmpty());
     }
 
     @Test
-    void shouldHaveNoViolationsWhenPriorityIsEqualMin() {
+    void shouldHaveNoViolationsWhenPriorityIsEqualToMin() {
         UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest("Title 1", "Description 1", 0);
         Set<ConstraintViolation<UpdateTaskRequest>> violations = validator.validate(updateTaskRequest);
         assertTrue(violations.isEmpty());
