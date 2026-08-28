@@ -7,7 +7,6 @@ import com.example.springlearning.spring_learning.exception.TaskAlreadyExistsExc
 import com.example.springlearning.spring_learning.exception.TaskNotFoundException;
 import com.example.springlearning.spring_learning.model.Task;
 import com.example.springlearning.spring_learning.service.TaskService;
-import org.apache.coyote.BadRequestException;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.MediaType;
 import org.junit.jupiter.api.Test;
